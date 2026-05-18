@@ -7,7 +7,14 @@ StateId:
     type: string
   description: |
     State identifier.
-    Can be one of: "head" (canonical head in node's view), "genesis", "finalized", "justified", \<slot\>, \<hex encoded stateRoot with 0x prefix\>.
+    Can be one of: "head" (canonical head in node's view), "genesis", "finalized", "justified", "checkpoint", \<slot\>, \<hex encoded stateRoot with 0x prefix\>.
+
+    The "checkpoint" identifier returns a state intended for use by checkpoint sync
+    consumers. While the network is finalizing, it is equivalent to "finalized".
+    During extended non-finality, a node MAY return an epoch-boundary state ahead of
+    the finalized epoch (typically the latest epoch-aligned head state); selection
+    policy is node-defined. Clients consuming this identifier MUST be prepared for the
+    returned state to be unfinalized.
 BlockId:
   required: true
   name: block_id
@@ -17,7 +24,12 @@ BlockId:
     type: string
   description: |
     Block identifier.
-    Can be one of: "head" (canonical head in node's view), "genesis", "finalized", \<slot\>, \<hex encoded blockRoot with 0x prefix\>.
+    Can be one of: "head" (canonical head in node's view), "genesis", "finalized", "checkpoint", \<slot\>, \<hex encoded blockRoot with 0x prefix\>.
+
+    The "checkpoint" identifier returns a block that corresponds to the state returned
+    by the "checkpoint" state identifier. While the network is finalizing, it is
+    equivalent to "finalized". During extended non-finality, a node MAY return an
+    unfinalized block (typically the latest block at or before the epoch boundary).
 BlockRoot:
   required: true
   name: block_root
